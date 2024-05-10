@@ -1,20 +1,23 @@
 import useFirestore from "../../hooks/useFirestore";
+import { useMemo } from "react";
 
 const FamilyProfile = () => {
-  const { kidsDocs, parentsDocs } = useFirestore();
-  console.log(kidsDocs, parentsDocs);
+  const { parentsDocs } = useFirestore();
 
-  return (
-    <div>
-      <div>Family</div>
-      <h2>Kids</h2>
-      <ul>
-        {kidsDocs && kidsDocs.map((kid) => {
-          return <li key={kid.id}>{kid.notes}</li>
-        })}
-      </ul>
-    </div>
-  )
+  const data = [
+    {
+      firstName: 'John',
+      lastName: 'Smith'
+    },
+    {
+      firstName: 'Alice',
+      lastName: 'Smith'
+    }
+  ];
+
+
+
+  return (<div>hello</div>)
 };
 
 export default FamilyProfile;
