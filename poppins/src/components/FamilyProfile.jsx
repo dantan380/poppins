@@ -1,40 +1,41 @@
-import useFirestore from "../../hooks/useFirestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
-
+import familyFetcher from "../utils/dataFetcher/familyFetcher";
+import { useEffect, useState } from "react";
 
 const FamilyProfile = () => {
-  const { parentsDocs, kidsDocs, familiesDocs } = useFirestore();
-  console.log(parentsDocs, kidsDocs, familiesDocs);
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchData = async () => { 
+      try {
+        const data = await familyFetcher.getFamilyMembers({familyName: "Smith"})
+        setFamilyMembers(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
   <div>
-    {parentsDocs && parentsDocs.map(parent => (
-      <Card class="w-[400px] bg-gray-100 rounded-lg my-10 drop-shadow-lg" key={parent.id}>
+    {isLoading && <div>Loading...</div>}
+    {familyMembers && familyMembers.map(member => (
+      <Card className='w-[400px] bg-slate-200 my-10 rounded-xl drop-shadow-xl'key={member.id}>
         <CardHeader>
-          <div>
-            <CardTitle>{parent.firstName} {parent.lastName}</CardTitle>
-          </div>
+          <CardTitle>{member.firstName} {member.lastName}</CardTitle>
+          <div>{member.category}</div>
+          <CardDescription>{member.birthdate}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p>{parent.email}</p>
-          <p>{parent.phone}</p>
+        <CardContent className='flex flex-col'>
+          <div>{member.email}</div>
+          <div>{member.phone}</div>
+          <div>{member.notes}</div>
         </CardContent>
       </Card>
     ))}
-    {kidsDocs && kidsDocs.map(kid => (
-      <Card class="w-[400px] bg-gray-100 rounded-lg my-10 drop-shadow-lg" key={parent.id}>
-        <CardHeader>
-          <div>
-            <CardTitle>{kid.firstName} {kid.lastName}</CardTitle>
-            <CardDescription>{kid.birthdate}</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p>{kid.notes}</p>
-        </CardContent>
-      </Card>
-    ))}
-    
   </div>
 )
 };

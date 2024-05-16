@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { projFirestore } from "../firebase/config";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 const useFirestore = () => {
   const [docs, setDocs] = useState([{ kidsDocs: [], parentsDocs: [], familiesDocs: [] }])
@@ -10,7 +10,7 @@ const useFirestore = () => {
     const parentsCollectionRef = collection(projFirestore, 'parents');
     const familiesCollectionRef = collection(projFirestore, "families");
 
-    const kidsDocumentsQ = query(kidsCollectionRef, where("lastName", "==", "Smith"))
+    const kidsDocumentsQ = query(kidsCollectionRef);
     const parentsDocumentsQ = query(parentsCollectionRef);
     const familiesDocumentsQ = query(familiesCollectionRef);
     
