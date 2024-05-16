@@ -25,6 +25,17 @@ const FamilyProfile = () => {
     green: 'bg-green-500'
   }
 
+  const calculateAge = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
   return (
   <div>
     {isLoading && <div>Loading...</div>}
@@ -40,7 +51,7 @@ const FamilyProfile = () => {
               {member.category}
             </Badge>
           </div>
-          <CardDescription>{member.birthdate}</CardDescription>
+          {member.birthdate && <CardDescription>Age: {calculateAge(member.birthdate)}</CardDescription>}
         </CardHeader>
         <CardContent className='flex flex-col'>
           {member.email && <div>Email: {member.email}</div>}
