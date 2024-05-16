@@ -17,6 +17,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    "react/prop-types": ["error", { "ignore": ["className"] }]
+    "react/prop-types": ["error", { "ignore": ["className", "variant"] }]
   },
 }
