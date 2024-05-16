@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
+import { Badge } from "./ui/badge"
 import familyFetcher from "../utils/dataFetcher/familyFetcher";
 import { useEffect, useState } from "react";
 
@@ -19,20 +20,32 @@ const FamilyProfile = () => {
     fetchData();
   }, []);
 
+  const badgeColors = {
+    blue: 'bg-blue-500',
+    green: 'bg-green-500'
+  }
+
   return (
   <div>
     {isLoading && <div>Loading...</div>}
     {familyMembers && familyMembers.map(member => (
-      <Card className='w-[400px] bg-slate-200 my-10 rounded-xl drop-shadow-xl'key={member.id}>
+      <Card className='w-[400px] bg-slate-100 my-10 rounded-xl drop-shadow-xl'key={member.id}>
         <CardHeader>
-          <CardTitle>{member.firstName} {member.lastName}</CardTitle>
-          <div>{member.category}</div>
+          <div className="flex flex-row justify-between">
+            <CardTitle>{member.firstName} {member.lastName}</CardTitle>
+            <Badge 
+              className={
+                `${member.category === 'Parent' ? badgeColors.green : badgeColors.blue} w-fit` 
+                }>
+              {member.category}
+            </Badge>
+          </div>
           <CardDescription>{member.birthdate}</CardDescription>
         </CardHeader>
         <CardContent className='flex flex-col'>
-          <div>{member.email}</div>
-          <div>{member.phone}</div>
-          <div>{member.notes}</div>
+          {member.email && <div>Email: {member.email}</div>}
+          {member.phone && <div>Phone: {member.phone}</div>}
+          {member.notes && <div>Notes: {member.notes}</div>}
         </CardContent>
       </Card>
     ))}
