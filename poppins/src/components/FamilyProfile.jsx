@@ -1,24 +1,24 @@
+/* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Badge } from "./ui/badge"
-import familyFetcher from "../utils/dataFetcher/familyFetcher";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
-const FamilyProfile = () => {
-  const [familyMembers, setFamilyMembers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const FamilyProfile = ({ isLoading, familyMembers }) => {
+  // const [familyMembers, setFamilyMembers] = useState([]);
+  // const [isLoading, setIsLoading] = useState(true);
   
-  useEffect(() => {
-    const fetchData = async () => { 
-      try {
-        const data = await familyFetcher.getFamilyMembers({familyName: "Smith"})
-        setFamilyMembers(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => { 
+  //     try {
+  //       const data = await familyFetcher.getFamilyMembers({familyName: "Smith"})
+  //       setFamilyMembers(data);
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const badgeColors = {
     blue: 'bg-blue-500',
@@ -34,6 +34,14 @@ const FamilyProfile = () => {
       age--;
     }
     return age;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!familyMembers || familyMembers.length === 0) {
+    return <div>No family members found</div>;
   }
 
   return (
