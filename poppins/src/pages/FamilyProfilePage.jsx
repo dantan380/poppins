@@ -29,6 +29,7 @@ const FamilyProfilePage = () => {
   }, [familyId]);
 
   return (
+  
     <FamilyProfile isLoading={loading} familyMembers={members} />
   );
 };

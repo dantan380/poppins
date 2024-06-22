@@ -2,11 +2,14 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Badge } from "./ui/badge"
 import { Checkbox } from "./ui/checkbox";
-import { useState } from "react";
+// import { useState } from "react";
 import { Button } from "./ui/button";
+import { useCheckIn } from "../context/CheckInContext";
+import { useNavigate } from "react-router-dom";
 
 const FamilyProfile = ({ isLoading, familyMembers }) => {
-  const [checkedIn, setCheckedIn] = useState([]);
+  const { checkedIn, setCheckedIn } = useCheckIn();
+  const navigate = useNavigate();
 
   const addCheckedIn = (member) => {
     setCheckedIn(prevCheckedIn => [
@@ -15,6 +18,11 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
     ]);
     console.log(checkedIn);
   };
+
+  const handleCheckIn = () => {
+    console.log(checkedIn);
+    navigate('/');
+  }
 
   const badgeColors = {
     blue: 'bg-blue-500',
@@ -65,7 +73,7 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
         </CardContent>
       </Card>
     ))}
-    <Button onClick={() => console.log(checkedIn)}>Check In</Button>
+    <Button onClick={handleCheckIn}>Check In</Button>
   </div>
 )
 };
