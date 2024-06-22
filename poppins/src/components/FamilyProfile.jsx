@@ -1,24 +1,20 @@
 /* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Badge } from "./ui/badge"
-// import { useEffect, useState } from "react";
+import { Checkbox } from "./ui/checkbox";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 const FamilyProfile = ({ isLoading, familyMembers }) => {
-  // const [familyMembers, setFamilyMembers] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
-  
-  // useEffect(() => {
-  //   const fetchData = async () => { 
-  //     try {
-  //       const data = await familyFetcher.getFamilyMembers({familyName: "Smith"})
-  //       setFamilyMembers(data);
-  //       setIsLoading(false);
-  //     } catch (error) {
-  //       console.error('Error:', error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const [checkedIn, setCheckedIn] = useState([]);
+
+  const addCheckedIn = (member) => {
+    setCheckedIn(prevCheckedIn => [
+      ...prevCheckedIn,
+      { id: member.id, checkIn: true }
+    ]);
+    console.log(checkedIn);
+  };
 
   const badgeColors = {
     blue: 'bg-blue-500',
@@ -65,9 +61,11 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
           {member.email && <div>Email: {member.email}</div>}
           {member.phone && <div>Phone: {member.phone}</div>}
           {member.notes && <div>Notes: {member.notes}</div>}
+          {member.category === 'Parent' ? <Checkbox disabled></Checkbox> : <Checkbox onClick={() => addCheckedIn({ id: member.id })}></Checkbox>}
         </CardContent>
       </Card>
     ))}
+    <Button onClick={() => console.log(checkedIn)}>Check In</Button>
   </div>
 )
 };
