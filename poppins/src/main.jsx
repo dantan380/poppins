@@ -3,6 +3,7 @@ import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import FamilyProfilePage from './pages/FamilyProfilePage.jsx';
+import { CheckInProvider } from './context/CheckInContext.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  
-   <RouterProvider router={router} />
-  
+  <CheckInProvider>
+    <RouterProvider router={router} />
+  </CheckInProvider>
 )
