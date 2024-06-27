@@ -14,6 +14,7 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
   const addCheckedIn = (member) => {
     setCheckedIn(prevCheckedIn => [
       ...prevCheckedIn,
+      //Ideally, call firebase function to create 'checked-in' document with this info.
       { id: member.id, checkIn: true }
     ]);
     console.log(checkedIn);
@@ -52,7 +53,7 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
   <div>
     {isLoading && <div>Loading...</div>}
     {familyMembers && familyMembers.map(member => (
-      <Card className='w-[400px] bg-slate-100 my-10 rounded-xl drop-shadow-xl'key={member.id}>
+      <Card className='w-[400px] bg-slate-100 my-10 rounded-lg drop-shadow-xl'key={member.id}>
         <CardHeader>
           <div className="flex flex-row justify-between">
             <CardTitle>{member.firstName} {member.lastName}</CardTitle>

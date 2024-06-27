@@ -40,6 +40,24 @@ const familyFetcher = {
     const memberDocsArrays = await Promise.all(memberDocsPromises);
     const memberDocs = memberDocsArrays.reduce((acc, val) => acc.concat(val), []);
     return memberDocs;
+  },
+
+  getCheckedIn: async (kidsCheckedIn) => {
+    //Ideally, get checkedIn docs that were created upon checking in kids.
+    //checkedIn docs would kids' name, time they were checked in, and possibly checkout time.
+    //const checkedInCollectionRef = collection(projFirestore, "checked-in");
+    //const checkedInQuery = query(checkedInCollectionRef, where("createdAt", "==", "today's date"));
+    //return checkedInQuery;
+    const kidsCollectionRef = collection(projFirestore, "kids");
+    const kidsDocsPromises = kidsCheckedIn.map(async (checkedIn) => {
+      const kidQuery = query(kidsCollectionRef, where(documentId(), "==", checkedIn.id));
+      const kidQuerySnap = await getDocs(kidQuery);
+      return kidQuerySnap.docs.map((kidDoc) => ({...kidDoc.data(), id: kidDoc.id}));
+    });
+
+    const kidDocsArray = await Promise.all(kidsDocsPromises);
+    const kidDocs = kidDocsArray.reduce((acc, val) => acc.concat(val), []);
+    return kidDocs;
   }
 }
 
