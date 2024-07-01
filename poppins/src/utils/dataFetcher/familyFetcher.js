@@ -1,5 +1,5 @@
 import { projFirestore } from "../../../firebase/config";
-import { collection, query, where, getDocs, documentId, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, documentId, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const familyFetcher = {
 
@@ -58,7 +58,35 @@ const familyFetcher = {
     const kidDocsArray = await Promise.all(kidsDocsPromises);
     const kidDocs = kidDocsArray.reduce((acc, val) => acc.concat(val), []);
     return kidDocs;
+  },
+
+  checkInChildren: async (childrenToCheckIn) => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const checkedInRef = collection(projFirestore, "checked-in");
+    const todayDocRef = doc(checkedInRef, today);
+    const childrenSubCollectionRef = collection(todayDocRef, 'children');
+    const checkedInChildren = [];
+
+    try {
+      await setDoc(todayDocRef, { date: today }, { merge: true });
+
+      for (const child of childrenToCheckIn) {
+        const childDocRef = doc(childrenSubCollectionRef, child.id);
+        await setDoc(childDocRef, {
+          childId: child.id,
+          timestamp: serverTimestamp()
+        }, {merge: true });
+        checkedInChildren.push(child.id);
+      }
+
+      console.log(`Check-in completed for ${checkedInChildren.length} children on ${today}`);
+      return { success: true, checkedInChildren, date: today };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: error.message };
+    }
   }
-}
+};
 
 export default familyFetcher;
