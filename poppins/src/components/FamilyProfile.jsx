@@ -6,6 +6,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { useCheckIn } from "../context/CheckInContext";
 import { useNavigate } from "react-router-dom";
+import familyFetcher from "../utils/dataFetcher/familyFetcher";
 
 const FamilyProfile = ({ isLoading, familyMembers }) => {
   const { checkedIn, setCheckedIn } = useCheckIn();
@@ -15,15 +16,21 @@ const FamilyProfile = ({ isLoading, familyMembers }) => {
     setCheckedIn(prevCheckedIn => [
       ...prevCheckedIn,
       //Ideally, call firebase function to create 'checked-in' document with this info.
-      { id: member.id, checkIn: true }
+      { id: member.id }
     ]);
     console.log(checkedIn);
   };
 
-  const handleCheckIn = () => {
-    console.log(checkedIn);
-    navigate('/');
-  }
+  const handleCheckIn = async () => {
+    const result = await familyFetcher.checkInChildren(checkedIn);
+    if (result.success) {
+      console.log(`Check-in completed for ${result.checkedInChildren.length} children on ${result.date}`);
+      setCheckedIn([]);
+      navigate('/');
+    } else {
+      console.error('Error during check-in:', result.error);
+    }
+  };
 
   const badgeColors = {
     blue: 'bg-blue-500',
