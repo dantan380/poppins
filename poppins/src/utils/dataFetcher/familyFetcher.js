@@ -1,5 +1,5 @@
 import { projFirestore } from "../../../firebase/config";
-import { collection, query, where, getDocs, documentId, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, documentId, doc, getDoc, serverTimestamp, setDoc, orderBy, limit } from "firebase/firestore";
 
 const familyFetcher = {
 
@@ -42,22 +42,49 @@ const familyFetcher = {
     return memberDocs;
   },
 
-  getCheckedIn: async (kidsCheckedIn) => {
+  getCheckedIn: async () => {
     //Ideally, get checkedIn docs that were created upon checking in kids.
     //checkedIn docs would kids' name, time they were checked in, and possibly checkout time.
     //const checkedInCollectionRef = collection(projFirestore, "checked-in");
     //const checkedInQuery = query(checkedInCollectionRef, where("createdAt", "==", "today's date"));
     //return checkedInQuery;
-    const kidsCollectionRef = collection(projFirestore, "kids");
-    const kidsDocsPromises = kidsCheckedIn.map(async (checkedIn) => {
-      const kidQuery = query(kidsCollectionRef, where(documentId(), "==", checkedIn.id));
-      const kidQuerySnap = await getDocs(kidQuery);
-      return kidQuerySnap.docs.map((kidDoc) => ({...kidDoc.data(), id: kidDoc.id}));
-    });
+    const checkedInCollectionRef = collection(projFirestore, "checked-in");
+    
+    try {
+      const recentDateQuery = query(checkedInCollectionRef, orderBy('date', 'desc'), limit(1));
+      const recentDateSnap = await getDocs(recentDateQuery);
 
-    const kidDocsArray = await Promise.all(kidsDocsPromises);
-    const kidDocs = kidDocsArray.reduce((acc, val) => acc.concat(val), []);
-    return kidDocs;
+      if (recentDateSnap.empty) {
+        console.log('No check-ins found');
+        return { success: true, checkedInChildren: [], date: null };
+      }
+
+      const recentDateDoc = recentDateSnap.docs[0];
+      const recentDate = recentDateDoc.id;
+
+      const childrenCollectionRef = collection(recentDateDoc.ref, 'children');
+
+      const childrenQuery = query(childrenCollectionRef);
+      const childrenSnap = await getDocs(childrenQuery);
+
+      const checkedInChildrenIds = childrenSnap.docs.map(doc => doc.id);
+
+      const mainChildrenCollectionRef = collection(projFirestore, 'kids');
+      const checkedInDocsPromises = checkedInChildrenIds.map(async (checkedInChildId) => {
+        const mainChildQuery = query(mainChildrenCollectionRef, where(documentId(), "==", checkedInChildId));
+        const mainChildSnap = await getDocs(mainChildQuery);
+        return mainChildSnap.docs.map((childDoc) => ({...childDoc.data(), id: childDoc.id}));
+      });
+
+      const checkedInChildrenDocsArray = await Promise.all(checkedInDocsPromises);
+      const checkedInChildrenDocs = checkedInChildrenDocsArray.reduce((acc, val) => acc.concat(val), []);
+
+      console.log(`Retrieved ${checkedInChildrenDocs.length} checked-in children for ${recentDate}`);
+      return { success: true, checkedInChildrenDocs, date: recentDate };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: error.message };
+    }
   },
 
   checkInChildren: async (childrenToCheckIn) => {
