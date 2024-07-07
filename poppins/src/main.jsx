@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import FamilyProfilePage from './pages/FamilyProfilePage.jsx';
 import { CheckInProvider } from './context/CheckInContext.jsx';
+import ReportsPage from './pages/ReportsPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: 'family/:familyId',
     element: <FamilyProfilePage />
+  },
+  {
+    path: 'reports/',
+    element: <ReportsPage />
   }
 ]);
 
