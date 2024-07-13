@@ -1,26 +1,13 @@
-import { useState, useEffect } from "react";
-import familyFetcher from "../utils/dataFetcher/familyFetcher";
+import { useReportKids } from "../context/ReportContext";
 import { Card, CardTitle } from "../components/ui/card";
+import { DatePickerForm } from "../components/DatePickerForm";
 
 const ReportsPage = () => {
-  const [kidsInReport, setKidsInReport] = useState([]);
-
-  const reportDate = "2024-07-05"
-
-  useEffect(() => {
-    fetchKidsInReport(reportDate);
-  }, []);
-
-  const fetchKidsInReport = async (inputDate) => {
-    const result = await familyFetcher.getCheckedInWithDate(inputDate);
-
-    if (result.success) {
-      setKidsInReport(result.checkedInChildrenDocs)
-    }
-  };
+  const { kidsInReport } = useReportKids();
 
   return (
     <div>
+      <DatePickerForm />
       {kidsInReport && kidsInReport.map(kid => (
       <Card className='w-[400px] bg-slate-100 my-10 rounded-lg drop-shadow-xl' key={kid.id}>
         <CardTitle>{kid.firstName} {kid.lastName}</CardTitle>
