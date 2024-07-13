@@ -5,6 +5,7 @@ import './index.css'
 import FamilyProfilePage from './pages/FamilyProfilePage.jsx';
 import { CheckInProvider } from './context/CheckInContext.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
+import { ReportProvider } from './context/ReportContext.jsx';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <CheckInProvider>
-    <RouterProvider router={router} />
+    <ReportProvider>
+      <RouterProvider router={router} />
+    </ReportProvider>
   </CheckInProvider>
 )
