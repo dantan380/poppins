@@ -6,6 +6,7 @@ import FamilyProfilePage from './pages/FamilyProfilePage.jsx';
 import { CheckInProvider } from './context/CheckInContext.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
 import { ReportProvider } from './context/ReportContext.jsx';
+import CreateFamilyProfilePage from './pages/CreateFamilyProfilePage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: 'reports/',
     element: <ReportsPage />
+  },
+  {
+    path: 'createFamily',
+    element: <CreateFamilyProfilePage />
   }
 ]);
 
