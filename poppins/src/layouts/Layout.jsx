@@ -35,6 +35,9 @@ const Layout = ({ onSearch, families, loading, error }) => {
       <Button>
         <Link to={'/reports/'}>Reports</Link>
       </Button>
+      <Button>
+        <Link to={'/createFamily'}>Create new Family Profile</Link>
+      </Button>
       <CheckInPage families={families} loading={loading} error={error}/>
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
