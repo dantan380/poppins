@@ -69,7 +69,7 @@ const familyFetcher = {
 
       const checkedInChildrenIds = childrenSnap.docs.map(doc => doc.id);
 
-      const mainChildrenCollectionRef = collection(projFirestore, 'kids');
+      const mainChildrenCollectionRef = collection(projFirestore, 'members');
       const checkedInDocsPromises = checkedInChildrenIds.map(async (checkedInChildId) => {
         const mainChildQuery = query(mainChildrenCollectionRef, where(documentId(), "==", checkedInChildId));
         const mainChildSnap = await getDocs(mainChildQuery);
@@ -109,7 +109,7 @@ const familyFetcher = {
 
       const checkedInChildrenIds = childrenSnap.docs.map(doc => doc.id);
 
-      const mainChildrenCollectionRef = collection(projFirestore, 'kids');
+      const mainChildrenCollectionRef = collection(projFirestore, 'members');
       const checkedInDocsPromises = checkedInChildrenIds.map(async (checkedInChildId) => {
         const mainChildQuery = query(mainChildrenCollectionRef, where(documentId(), "==", checkedInChildId));
         const mainChildSnap = await getDocs(mainChildQuery);
