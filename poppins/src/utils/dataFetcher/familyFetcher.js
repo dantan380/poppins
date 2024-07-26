@@ -8,13 +8,23 @@ const familyFetcher = {
   */
   getFamilies: async (queryInput) => {
     const familiesCollectionRef = collection(projFirestore, "families");
-    const familyQuery = query(familiesCollectionRef, where("familyName", "==", queryInput.familyName));
+
+    const searchTerm = queryInput.familyName.toLowerCase();
+
+    const familyQuery = query(
+      familiesCollectionRef,
+      orderBy("familyName"),
+      limit(100)
+    );
 
     let familiesDocuments = [];
 
     const querySnapshot = await getDocs(familyQuery);
     querySnapshot.forEach((familyDoc) => {
-      familiesDocuments.push({...familyDoc.data(), id: familyDoc.id})
+      const familyData = familyDoc.data();
+      if (familyData.familyName.toLowerCase().startsWith(searchTerm)) {
+        familiesDocuments.push({...familyData, id: familyDoc.id});
+      }
     });
     
     return familiesDocuments;

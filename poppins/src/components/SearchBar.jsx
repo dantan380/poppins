@@ -1,12 +1,20 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const SearchBar = ({ onSearch }) => {
   const [familyName, setFamilyName] = useState('')
 
+  useEffect(() => {
+    if (familyName.length > 0) {
+      onSearch(familyName);
+    }
+  }, [familyName, onSearch]);
+
 
   const handleInputChange = (e) => {
-    setFamilyName(e.target.value);
+    const newValue = e.target.value;
+    setFamilyName(newValue);
+    onSearch(newValue);
   };
 
   const handleSubmit = (e) => {

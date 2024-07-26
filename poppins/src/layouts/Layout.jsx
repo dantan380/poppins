@@ -42,15 +42,19 @@ const Layout = ({ onSearch, families, loading, error }) => {
             <Button>
               <Link to={'/createFamily'}>Create new Family Profile</Link>
             </Button>
-            <CheckInPage families={families} loading={loading} error={error}/>
-            {isLoading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            {recentDate && <h2>Report for latest date: {recentDate}</h2>}
-            {kidsCheckedIn && kidsCheckedIn.map(kid => (
-              <Card className='w-[400px] bg-slate-100 my-10 rounded-lg drop-shadow-xl' key={kid.id}>
-                <CardTitle>{kid.firstName} {kid.lastName}</CardTitle>
-              </Card>
-            ))}
+            {isLoading ? (<p>Loading...</p>
+            ): (
+              <>
+                <CheckInPage families={families} loading={loading} error={error}/>
+                {error && <p>{error}</p>}
+                {recentDate && <h2>Report for latest date: {recentDate}</h2>}
+                {kidsCheckedIn && kidsCheckedIn.map(kid => (
+                  <Card className='w-[400px] bg-slate-100 my-10 rounded-lg drop-shadow-xl' key={kid.id}>
+                    <CardTitle>{kid.firstName} {kid.lastName}</CardTitle>
+                  </Card>
+                ))}
+              </>
+            )}
             <Outlet />
         </div>
       </div>
