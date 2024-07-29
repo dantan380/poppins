@@ -5,8 +5,6 @@ import CheckInPage from "../pages/CheckInPage";
 import { Card, CardTitle } from "../components/ui/card";
 import familyFetcher from "../utils/dataFetcher/familyFetcher";
 import { useState, useEffect } from "react";
-import { Button } from "../components/ui/button";
-import { Link } from "react-router-dom";
 import SideNavBar from "../components/SideNavBar";
 
 const Layout = ({ onSearch, families, loading, error }) => {
@@ -32,16 +30,12 @@ const Layout = ({ onSearch, families, loading, error }) => {
 
   return (
     <div>
-      <div className="flex flex-row">
+      <div className="flex">
         <SideNavBar />
-        <div>
+        <div className="w-full my-6 p-36 flex-grow">
+          <div className="flex">
           <SearchBar onSearch={onSearch} />
-            <Button>
-              <Link to={'/reports/'}>Reports</Link>
-            </Button>
-            <Button>
-              <Link to={'/createFamily'}>Create new Family Profile</Link>
-            </Button>
+          </div>
             {isLoading ? (<p>Loading...</p>
             ): (
               <>
