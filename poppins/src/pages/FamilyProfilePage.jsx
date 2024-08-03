@@ -2,6 +2,7 @@ import familyFetcher from "../utils/dataFetcher/familyFetcher";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FamilyProfile from "../components/FamilyProfile";
+import SideNavBar from "../components/SideNavBar";
 
 
 const FamilyProfilePage = () => {
@@ -29,8 +30,10 @@ const FamilyProfilePage = () => {
   }, [familyId]);
 
   return (
-  
-    <FamilyProfile isLoading={loading} familyMembers={members} />
+    <div className="flex">
+      <SideNavBar />
+      <FamilyProfile isLoading={loading} familyMembers={members} />
+    </div>
   );
 };
 
