@@ -7,6 +7,7 @@ import { CheckInProvider } from './context/CheckInContext.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
 import { ReportProvider } from './context/ReportContext.jsx';
 import CreateFamilyProfilePage from './pages/CreateFamilyProfilePage.jsx';
+import CheckedInPage from './pages/CheckedInPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: 'createFamily',
     element: <CreateFamilyProfilePage />
+  },
+  {
+    path: 'checkedInSummary',
+    element: <CheckedInPage />
   }
 ]);
 
