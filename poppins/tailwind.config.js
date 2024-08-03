@@ -21,6 +21,8 @@ module.exports = {
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
+        'primary-02': '#e7e8ff',
+        'primary-03': '#d0d4f4',
         'primary-04': '#5a24f5',
         'primary-05': '#4612d9',
         border: "hsl(var(--border))",
