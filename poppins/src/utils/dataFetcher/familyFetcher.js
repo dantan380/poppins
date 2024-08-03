@@ -1,11 +1,21 @@
 import { projFirestore } from "../../../firebase/config";
-import { collection, query, where, getDocs, documentId, doc, getDoc, serverTimestamp, setDoc, orderBy, limit } from "firebase/firestore";
+import { collection, query, where, getDocs, documentId, doc, getDoc, serverTimestamp, setDoc, orderBy, limit, deleteDoc } from "firebase/firestore";
 
 const familyFetcher = {
 
-  /*
-    Fetch all the member documents for a given family name
-  */
+  getMembers: async (memberIds) => {
+    const membersCollectionRef = collection(projFirestore, "members");
+    const memberDocsPromises = memberIds.map(async (member) => {
+      const memberDoc = await getDoc(doc(membersCollectionRef, member.id));
+      if (memberDoc.exists()) {
+        return { ...memberDoc.data(), id: memberDoc.id };
+      }
+      return null;
+    });
+
+    const memberDocs = await Promise.all(memberDocsPromises);
+    return memberDocs.filter(doc => doc !== null);
+  },
   getFamilies: async (queryInput) => {
     const familiesCollectionRef = collection(projFirestore, "families");
 
@@ -159,6 +169,50 @@ const familyFetcher = {
 
       console.log(`Check-in completed for ${checkedInChildren.length} children on ${today}`);
       return { success: true, checkedInChildren, date: today };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  undoCheckIn: async (childrenToUncheck) => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const checkedInRef = collection(projFirestore, "checked-in");
+    const todayDocRef = doc(checkedInRef, today);
+    const childrenSubCollectionRef = collection(todayDocRef, 'children');
+
+    const undoneChildren = [];
+
+    try {
+      for (const child of childrenToUncheck) {
+        const childDocRef = doc(childrenSubCollectionRef, child.id);
+
+        const childDoc = await getDoc(childDocRef);
+
+        if (childDoc.exists()) {
+          await deleteDoc(childDocRef);
+          undoneChildren.push(child.id);
+          console.log(`Undid check-in for child with ID ${child.id} on ${today}`);
+        } else {
+          console.log(`Child with ID: ${child.id} was not checked in today.`);
+        }
+      }
+
+      if (undoneChildren.length > 0) {
+        return {
+          success: true,
+          undoneChildrenIds: undoneChildren,
+          date: today,
+          message: `Undid check-in for ${undoneChildren.length} child(ren) on ${today}`
+        };
+      } else {
+        return {
+          success: false,
+          message: "No specified children were checked in today to undo."
+        };
+      }
+      
     } catch (error) {
       console.error(error);
       return { success: false, error: error.message };
